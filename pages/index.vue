@@ -2,7 +2,7 @@
   <div class="mx-auto p-6 max-w-2xl">
     <h1 class="text-4xl font-bold text-center mb-8">Habit Tracker</h1>
     <HabitForm />
-    <HabitList />
+    <HabitList :habits="habitStore.habits" />
   </div>
 </template>
 
@@ -14,7 +14,9 @@ import { useHabitStore } from '~/stores/habits';
 
 const habitStore = useHabitStore();
 
-console.log(habitStore.habits);
+onMounted(() => {
+  habitStore.fetchHabits()
+})
 
 </script>
 
