@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { addDoc, collection, doc, updateDoc , deleteDoc } from 'firebase/firestore'
 import { getDocs } from 'firebase/firestore'
 
+import { format } from 'date-fns'
+
 export const useHabitStore = defineStore('habitStore', {
   state : () => ({
     habits: [],
@@ -54,10 +56,23 @@ export const useHabitStore = defineStore('habitStore', {
       const docRef = doc($db, 'habits', id)
       await deleteDoc(docRef)
       this.habits = this.habits.filter(habit => habit.id !== id)
-    }
+    },
 
 
     //completing a daily habit
+    toggleCompletion(habit) {
+      const today = format(new Date(), 'yyyy-MM-dd')
+
+      if (habit.completions.includes(today)) {
+        habit.completions = habit.completions.filter(date => date !== today)
+      } else {
+        habit.completions.push(today)
+      }
+
+      this.updateHabit(habit.id, {
+        completions: habit.completions,
+      })
+    },
 
 
     //calculating streaks
