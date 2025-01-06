@@ -36,7 +36,17 @@ export const useHabitStore = defineStore('habitStore', {
 
 
     //updating habits
-
+    async updateHabit(id, updates) {
+      const { $db } = useNuxtApp()
+      // update in firebase
+      const habitRef = doc($db, 'habits', id)
+      await updateDoc(habitRef, updates)
+      // update pinia store
+      const index = this.habits.findIndex((habit) => habit.id === id)
+      if (index !== -1) {
+        this.habits[index] = { ...this.habits[index], ...updates }
+      }
+    },
 
     //deleting habits
     async deleteHabit(id) {
